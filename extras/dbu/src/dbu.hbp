@@ -1,0 +1,16 @@
+-gtwvt
+-strip
+-oDBU
+-icon=database.ico
+
+dbu.prg
+dbucopy.prg
+dbuedit.prg
+dbuhelp.prg
+dbuindx.prg
+dbunet.prg
+dbustru.prg
+dbuutil.prg
+dbuview.prg
+
+dbu.rc
