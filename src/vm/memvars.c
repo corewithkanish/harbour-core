@@ -574,7 +574,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen )
    PHB_DYNS pDynVar;
    char * szValue = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetStrValuePtr(%s, %p)", ( void * ) szVarName, ( void * ) pnLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetStrValuePtr(%s, %p)", szVarName, ( void * ) pnLen ) );
 
    pDynVar = hb_memvarFindSymbol( szVarName, *pnLen );
 
@@ -1291,6 +1291,27 @@ HB_FUNC( __MVGET )
        */
       hb_errRT_BASE_SubstR( EG_ARG, 3009, NULL, NULL, HB_ERR_ARGS_BASEPARAMS );
    }
+}
+
+HB_FUNC( __MVGETDEF )
+{
+   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+
+   if( pName )
+   {
+      HB_STACK_TLS_PRELOAD
+      PHB_ITEM pMemvar;
+      PHB_DYNS pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
+                                              pName->item.asString.length );
+
+      if( pDynVar && ( pMemvar = hb_dynsymGetMemvar( pDynVar ) ) != NULL )
+         hb_itemReturn( HB_IS_BYREF( pMemvar ) ? hb_itemUnRef( pMemvar ) :
+                                                 pMemvar );
+      else if( hb_pcount() >= 2 )
+         hb_itemReturn( hb_param( 2, HB_IT_ANY ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3009, NULL, NULL, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __MVPUT )
